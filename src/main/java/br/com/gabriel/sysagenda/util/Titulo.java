@@ -1,4 +1,4 @@
-package br.com.ljr.sysagenda.util;
+package br.com.gabriel.sysagenda.util;
 
 public class Titulo {
 	public static final String COD_CONTATO = "Codigo do Contato";

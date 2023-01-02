@@ -1,4 +1,4 @@
-package br.com.ljr.sysagenda.domain;
+package br.com.gabriel.sysagenda.domain;
 
 public class Contato {
 

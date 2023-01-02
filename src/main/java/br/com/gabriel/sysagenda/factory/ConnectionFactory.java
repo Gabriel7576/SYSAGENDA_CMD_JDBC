@@ -1,4 +1,4 @@
-package br.com.ljr.sysagenda.factory;
+package br.com.gabriel.sysagenda.factory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

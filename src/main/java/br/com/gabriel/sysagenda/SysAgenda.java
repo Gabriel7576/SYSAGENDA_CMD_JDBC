@@ -1,17 +1,17 @@
-package br.com.ljr.sysagenda;
+package br.com.gabriel.sysagenda;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
-import br.com.ljr.sysagenda.business.ContatoBss;
-import br.com.ljr.sysagenda.business.LigacaoBss;
-import br.com.ljr.sysagenda.domain.Contato;
-import br.com.ljr.sysagenda.domain.Ligacao;
-import br.com.ljr.sysagenda.factory.ConnectionFactory;
-import br.com.ljr.sysagenda.util.Funcoes;
-import br.com.ljr.sysagenda.util.Titulo;
+import br.com.gabriel.sysagenda.business.ContatoBss;
+import br.com.gabriel.sysagenda.business.LigacaoBss;
+import br.com.gabriel.sysagenda.domain.Contato;
+import br.com.gabriel.sysagenda.domain.Ligacao;
+import br.com.gabriel.sysagenda.factory.ConnectionFactory;
+import br.com.gabriel.sysagenda.util.Funcoes;
+import br.com.gabriel.sysagenda.util.Titulo;
 
 public class SysAgenda {
 

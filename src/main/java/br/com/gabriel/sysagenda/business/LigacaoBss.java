@@ -1,9 +1,9 @@
-package br.com.ljr.sysagenda.business;
+package br.com.gabriel.sysagenda.business;
 
 import java.util.List;
 
-import br.com.ljr.sysagenda.dao.LigacaoDao;
-import br.com.ljr.sysagenda.domain.Ligacao;
+import br.com.gabriel.sysagenda.dao.LigacaoDao;
+import br.com.gabriel.sysagenda.domain.Ligacao;
 
 public class LigacaoBss {
 

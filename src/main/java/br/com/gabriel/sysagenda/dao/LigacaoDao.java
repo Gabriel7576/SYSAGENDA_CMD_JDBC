@@ -1,4 +1,4 @@
-package br.com.ljr.sysagenda.dao;
+package br.com.gabriel.sysagenda.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.ljr.sysagenda.domain.Ligacao;
-import br.com.ljr.sysagenda.factory.ConnectionFactory;
+import br.com.gabriel.sysagenda.domain.Ligacao;
+import br.com.gabriel.sysagenda.factory.ConnectionFactory;
 
 public class LigacaoDao {
 
