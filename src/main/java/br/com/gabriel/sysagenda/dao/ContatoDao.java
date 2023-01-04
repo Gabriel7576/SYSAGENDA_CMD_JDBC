@@ -41,7 +41,7 @@ public class ContatoDao {
 		PreparedStatement stmt;
 		List<Contato> contatos = null;
 		try {
-			stmt = connection.prepareStatement("SELECT * FROM CONTATO ORDER BY cod_contato");
+			stmt = connection.prepareStatement("SELECT * FROM CONTATO ORDER BY COD_CONTATO");
 			contatos = new ArrayList<>();
 			ResultSet rs = stmt.executeQuery();
 

@@ -9,15 +9,16 @@ import br.com.gabriel.sysagenda.business.ContatoBss;
 import br.com.gabriel.sysagenda.business.LigacaoBss;
 import br.com.gabriel.sysagenda.domain.Contato;
 import br.com.gabriel.sysagenda.domain.Ligacao;
+import br.com.gabriel.sysagenda.domain.LigacaoId;
 import br.com.gabriel.sysagenda.factory.ConnectionFactory;
 import br.com.gabriel.sysagenda.util.Funcoes;
 import br.com.gabriel.sysagenda.util.Titulo;
 
 public class SysAgenda {
 
-	static int opcao;
-	static ContatoBss contatoBss = new ContatoBss();
-	static LigacaoBss ligacaoBss = new LigacaoBss();
+	private static int opcao;
+	private static ContatoBss contatoBss = new ContatoBss();
+	private static LigacaoBss ligacaoBss = new LigacaoBss();
 
 	public static void main(String[] args) {
 
@@ -26,7 +27,6 @@ public class SysAgenda {
 			Connection connection = ConnectionFactory.getConnection();
 
 			Scanner sc = new Scanner(System.in);
-			;
 
 			do {
 
@@ -37,7 +37,7 @@ public class SysAgenda {
 				System.out.println("-------------------------------------");
 
 				System.out.print("Digite a opção aqui : ");
-				opcao = sc.nextInt();
+				opcao = Integer.parseInt(sc.nextLine());
 
 				switch (opcao) {
 				case 1:
@@ -84,8 +84,8 @@ public class SysAgenda {
 			String op;
 			do {
 				System.out.print("Digite a opção aqui : ");
-				op = sc.next();
-				sn = Funcoes.verificaNumero(op);
+				op = sc.nextLine();
+				sn = Funcoes.isNumeroInvalido(op);
 			} while (sn);
 
 			opcao = Integer.parseInt(op);
@@ -93,117 +93,20 @@ public class SysAgenda {
 			switch (opcao) {
 
 			case 1:
-				List<Contato> contatolista = contatoBss.getList();
-
-				System.out.println("-------------------------------------");
-
-				for (Contato contato2 : contatolista) {
-					System.out.print("\n" + contato2 + "\n");
-				}
-
-				System.out.println("-------------------------------------");
-
+				listaContatos();
 				break;
 
 			case 2:
-				Contato contatoAdiciona = new Contato();
-				String nome;
-				String num;
-
-				contatoAdiciona.setCodContato(contatoBss.getCodContato() + 1);
-
-				do {
-
-					System.out.print("\nDIGITE O NOME DO CONTATO : ");
-					nome = sc.next();
-					sn = Funcoes.verificaNome(nome);
-
-					if (sn) {
-						System.out.println("\nPOR FAVOR DIGITAR SO LETRAS!!\n");
-					}
-
-				} while (sn);
-
-				do {
-
-					System.out.print("\nDIGITE O TELEFONE DO CONTATO : ");
-					num = sc.next();
-					sn = Funcoes.verificaNumero(num);
-
-					if (sn) {
-						System.out.println("\nPOR FAVOR DIGITAR SO NÚMEROS!!\n");
-					}
-
-				} while (sn);
-
-				contatoAdiciona.setNome(nome);
-				contatoAdiciona.setTelefone(Long.parseLong(num));
-
-				contatoBss.adiciona(contatoAdiciona);
-
-				System.out.println("\nCONTATO ADICIONADO\n");
+				addContato(sc);
 				break;
 
 			case 3:
-
-				System.out.print("\nDIGITE O " + Titulo.COD_CONTATO + " A SER ALTERADO : ");
-				Contato contatoAltera = contatoBss.getContato(sc.nextInt());
-
-				if (contatoAltera == null) {
-
-					System.out.print("\nESTE CONTATO NÃO EXISTE!!");
-
-				} else {
-
-					System.out.print("\nNOME [" + contatoAltera.getNome() + "] : ");
-
-					sc.nextLine();
-					String nom = sc.nextLine();
-
-					if (nom != null & !nom.equals("")) {
-						contatoAltera.setNome(nom);
-					}
-
-					System.out.print("\nTELEFONE [" + contatoAltera.getTelefone() + "] : ");
-
-					num = sc.nextLine();
-
-					if (!num.equals("")) {
-						contatoAltera.setTelefone(Long.parseLong(num));
-					}
-
-					contatoBss.alteraContato(contatoAltera);
-
-					System.out.println("\nContato alterado com Sucesso");
-				}
+				updateContato(sc);
 				break;
 
 			case 4:
 
-				System.out.print("\nDigite o " + Titulo.COD_CONTATO + " do contato para deleta-lo : ");
-				Integer numero = sc.nextInt();
-
-				Contato contato = contatoBss.getContato(numero);
-
-				if (contato == null) {
-
-					System.out.println("\nO Contato não existe!!");
-
-				} else {
-					sc.nextLine();
-
-					System.out.print("\nEssa ação podera apagar as ligações desse contato. Deseja Continuar [s/n] : ");
-
-					String boleano = sc.nextLine();
-
-					if (boleano.equalsIgnoreCase("s") || boleano.equalsIgnoreCase("sim")) {
-						sn = true;
-						contatoBss.deletaContato(numero, sn);
-						System.out.println("\nExcluido com Sucesso!\n");
-					}
-
-				}
-
+				deleteContato(sc);
 				break;
 
 			default:
@@ -215,17 +118,141 @@ public class SysAgenda {
 			}
 
 		} while (opcao != 5);
-		main(null);
 
+	}
+
+	private static void deleteContato(Scanner sc) {
+		System.out.print("\nDigite o " + Titulo.COD_CONTATO + " do contato para deleta-lo : ");
+		Integer numero = sc.nextInt();
+
+		// verifica se o contato existe
+		Contato contato = contatoBss.getContato(numero);
+		if (contato == null) {
+			System.out.println("\nO Contato não existe!!");
+		} else {
+			sc.nextLine();
+
+			System.out.print("\nEssa ação podera apagar as ligações desse contato. Deseja Continuar [s/n] : ");
+
+			String resp = sc.nextLine();
+
+			if (resp.equalsIgnoreCase("s") || resp.equalsIgnoreCase("sim")) {
+				contatoBss.deletaContato(numero);
+				System.out.println("\nExcluido com Sucesso!\n");
+			}
+		}
+	}
+
+	private static void updateContato(Scanner sc) {
+		System.out.print("\nDIGITE O " + Titulo.COD_CONTATO + " A SER ALTERADO : ");
+
+		// Verifica se o contato existe
+		String codContato = sc.nextLine();
+
+		Contato contatoAltera = contatoBss.getContato(Integer.parseInt(codContato));
+
+		if (contatoAltera == null) {
+
+			System.out.print("\nESTE CONTATO NÃO EXISTE!!");
+
+		} else {
+
+			System.out.print("\nNOME [" + contatoAltera.getNome() + "] : ");
+
+			String nom = sc.nextLine();
+
+			if (nom != null & !nom.equals("")) {
+				contatoAltera.setNome(nom);
+			}
+
+			System.out.print("\nTELEFONE [" + contatoAltera.getTelefone() + "] : ");
+
+			long teste = 0;
+			while (teste == 0) {
+				String num = sc.nextLine();
+				try {
+					if (num.length() < 12) {
+						teste = Long.parseLong(num);
+						contatoAltera.setTelefone(teste);
+					} else
+						System.out.println("Número inválido! Digite novamente!");
+				} catch (Exception e) {
+					System.out.println("Número inválido! Digite novamente!");
+				}
+			}
+
+			contatoBss.alteraContato(contatoAltera);
+
+			System.out.println("\nContato alterado com Sucesso");
+		}
+	}
+
+	private static void addContato(Scanner sc) {
+		boolean sn;
+		Contato contatoAdiciona = new Contato();
+		String nome;
+		String num;
+
+		contatoAdiciona.setCodContato(contatoBss.getCodContato() + 1);
+
+		do {
+
+			System.out.print("\nDIGITE O NOME DO CONTATO : ");
+			nome = sc.next();
+			sn = Funcoes.verificaNome(nome);
+
+			if (sn) {
+				System.out.println("\nPOR FAVOR DIGITAR SO LETRAS!!\n");
+			}
+
+		} while (sn);
+
+		do {
+
+			System.out.print("\nDIGITE O TELEFONE DO CONTATO : ");
+			num = sc.next();
+			sn = Funcoes.isNumeroInvalido(num);
+
+			if (num.length() >= 12) {
+				System.out.println("numero acima do permitido");
+				sn = false;
+			}
+
+		} while (sn);
+
+		contatoAdiciona.setNome(nome);
+		contatoAdiciona.setTelefone(Long.parseLong(num));
+
+		contatoBss.adiciona(contatoAdiciona);
+
+		System.out.println("\nCONTATO ADICIONADO\n");
+	}
+
+	private static void listaContatos() {
+		List<Contato> contatolista = contatoBss.getList();
+
+		System.out.println("-------------------------------------");
+
+		System.out.print("|         Nome           ");
+		System.out.print("| Cod Contato  ");
+		System.out.print("|Telefone");
+		System.out.println();
+		for (Contato contato2 : contatolista) {
+			System.out.print("|");
+			System.out.print(String.format("%-24.24s", contato2.getNome()));
+			System.out.print("|");
+			System.out.print(String.format("%-14.14s", contato2.getCodContato()));
+			System.out.print("|");
+			System.out.print(contato2.getTelefone());
+			System.out.println();
+		}
+
+		System.out.println("-------------------------------------");
 	}
 
 	public static void mostraMenuLigacao(Scanner sc) {
 		String op;
 		boolean sn;
-		String cod;
-		String data = null;
-		String hora;
-		String obs = null;
 
 		do {
 			System.out.println("-------------------------------------");
@@ -239,7 +266,7 @@ public class SysAgenda {
 			do {
 				System.out.print("Digite a opção aqui : ");
 				op = sc.next();
-				sn = Funcoes.verificaNumero(op);
+				sn = Funcoes.isNumeroInvalido(op);
 			} while (sn == true);
 
 			System.out.println();
@@ -247,202 +274,21 @@ public class SysAgenda {
 
 			switch (opcao) {
 			case 1:
-				List<Ligacao> list = ligacaoBss.getlist();
-
-				System.out.println("-------------------------------------\n");
-
-				for (Ligacao ligacao : list) {
-					System.out.println(ligacao + "\n");
-				}
-
-				System.out.println("-------------------------------------");
+				ligacaoLista();
 
 				break;
 
 			case 2:
-				Ligacao ligacaoAdiciona = new Ligacao();
-
-				do {
-					System.out.print("Digite o " + Titulo.COD_CONTATO + " : ");
-					cod = sc.next();
-					sn = Funcoes.verificaNumero(cod);
-				} while (sn);
-
-				ligacaoAdiciona.setCodContato(Integer.parseInt(cod));
-
-				Contato contato = contatoBss.getContato(Integer.parseInt(cod));
-
-				if (contato == null) {
-
-					System.out.println("\n" + Titulo.COD_CONTATO + " não existe!!");
-
-				} else {
-
-					ligacaoAdiciona.setCodLigacao(ligacaoBss.getCodLigacao(Integer.parseInt(cod))+ 1);
-
-					do {
-
-						System.out.print("Digite a data [dia/mes/ano] : ");
-						data = sc.next();
-
-						String[] dt = Funcoes.separa(data, "/");
-
-						int num = Integer.parseInt(dt[1]);
-						if (num >= 13) {
-							sn = false;
-						}
-
-					} while (sn);
-
-					do {
-						System.out.print("Digite a Hora [Hora:Minutos] : ");
-						hora = sc.next();
-						String[] horas = Funcoes.separa(hora, ":");
-						Integer h = Integer.parseInt(horas[0]);
-						Integer m = Integer.parseInt(horas[1]);
-
-						if (horas.length < 3) {
-
-							if (h >= 24 | m >= 60) {
-
-								System.out.println("\nHoras ou Minutos acima do Limite");
-								sn = true;
-
-							} else {
-								sn = false;
-							}
-						}
-
-					} while (sn);
-
-					ligacaoAdiciona.setData(data + " " + hora);
-
-					System.out.print("Digite a observação {opcional} : ");
-
-					sc.nextLine();
-					obs = sc.nextLine();
-					ligacaoAdiciona.setObs(obs);
-
-					ligacaoBss.adicionaLigacao(ligacaoAdiciona);
-
-					System.out.println("\nLigação adicionada");
-				}
+				ligacaoAdiciona(sc);
 
 				break;
 
 			case 3:
-				Ligacao ligacaoAltera = new Ligacao();
-
-				do {
-
-					System.out.print("Digite o " + Titulo.COD_CONTATO + " para o qual você ligou : ");
-					cod = sc.next();
-					sn = Funcoes.verificaNumero(cod);
-
-				} while (sn);
-
-				ligacaoAltera.setCodContato(Integer.parseInt(cod));
-
-				Contato contato1 = contatoBss.getContato(Integer.parseInt(cod));
-
-				if (contato1 == null) {
-
-					System.out.println("\n" + Titulo.COD_CONTATO + " não existe!!");
-
-				} else {
-
-					do {
-						System.out.print("Digite o " + Titulo.COD_LIGACAO + " a ser alterada : ");
-						cod = sc.next();
-						sn = Funcoes.verificaNumero(cod);
-					} while (sn);
-
-					ligacaoAltera.setCodLigacao(Integer.parseInt(cod));
-
-					ligacaoAltera = ligacaoBss.getLigacao(ligacaoAltera.getCodContato(), ligacaoAltera.getCodLigacao());
-
-					if (ligacaoAltera == null) {
-
-						System.out.println("\nLigação não existe!");
-
-					} else {
-
-						String[] array = Funcoes.separa(ligacaoAltera.getData(), " ");
-
-						String[] dt = Funcoes.separa(array[0], "-");
-						String dataFormat = dt[2] + "/" + dt[1] + "/" + dt[0];
-						array[0] = dataFormat;
-
-						String[] hr = Funcoes.separa(array[1], ":");
-						String horaFormat = hr[0] + ":" + hr[1];
-						array[1] = horaFormat;
-
-						System.out.print("Digite a data [dia/mes/ano] : ");
-						sc.nextLine();
-
-						data = sc.nextLine();
-						if (data != null & !data.equals("")) {
-							array[0] = data;
-						}
-
-						do {
-							System.out.print("Digite a Hora [Hora:Minutos] : ");
-
-							hora = sc.nextLine();
-							if (hora != null & !hora.equals("")) {
-								String[] horas = Funcoes.separa(hora, ":");
-								Integer h = Integer.parseInt(horas[0]);
-								Integer m = Integer.parseInt(horas[1]);
-
-								if (h >= 24 | m >= 60) {
-
-									System.out.println("\nHoras ou Minutos acima do Limite");
-									sn = true;
-
-								} else {
-
-									sn = false;
-
-									if (horas.length < 3) {
-										array[1] = hora;
-									}
-								}
-							}
-						} while (sn);
-
-						ligacaoAltera.setData("'" + array[0] + " " + array[1] + "'");
-
-						System.out.print("Digite a observação : ");
-						obs = sc.nextLine();
-
-						if (obs != null & !obs.equals("")) {
-							ligacaoAltera.setObs(obs);
-						}
-
-						ligacaoBss.alteraLigacao(ligacaoAltera);
-
-						System.out.println();
-					}
-				}
+				ligacaoAltera(sc);
 				break;
 
 			case 4:
-				Ligacao ligacaoApaga = new Ligacao();
-
-				sc.nextLine();
-
-				System.out.print("Digite o " + Titulo.COD_CONTATO + " : ");
-				ligacaoApaga.setCodContato(Integer.parseInt(sc.nextLine()));
-				System.out.print("Digite o " + Titulo.COD_LIGACAO + " a ser deletado : ");
-				ligacaoApaga.setCodLigacao(Integer.parseInt(sc.nextLine()));
-
-				ligacaoApaga = ligacaoBss.getLigacao(ligacaoApaga.getCodContato(), ligacaoApaga.getCodLigacao());
-
-				if (ligacaoApaga == null) {
-					System.out.println("\nEsse Ligação não existe!!");
-				} else {
-					ligacaoBss.deletaLigacao(ligacaoApaga);
-				}
+				ligacaoApaga(sc);
 
 				break;
 
@@ -451,7 +297,217 @@ public class SysAgenda {
 			}
 
 		} while (opcao != 5);
-		main(null);
+	}
+
+	private static void ligacaoApaga(Scanner sc) {
+		
+		Ligacao ligacao = new Ligacao();
+		LigacaoId id = new LigacaoId();
+
+		sc.nextLine();
+
+		System.out.print("Digite o " + Titulo.COD_CONTATO + " : ");
+		id.setCodContato(Integer.parseInt(sc.nextLine()));
+		System.out.print("Digite o " + Titulo.COD_LIGACAO + " a ser deletado : ");
+		id.setCodLigacao(Integer.parseInt(sc.nextLine()));
+
+		ligacao.setId(id);
+
+		if (ligacaoBss.getLigacao(id.getCodContato(), id.getCodLigacao()) == null) {
+
+			System.out.println("\nEsse Ligação não existe!!");
+
+		} else {
+
+			ligacaoBss.deletaLigacao(ligacao);
+
+		}
+	}
+
+	private static void ligacaoAltera(Scanner sc) {
+		
+		boolean sn;
+		String codigo;
+		String data;
+		String hora;
+		String obs;
+		Ligacao ligacao = new Ligacao();
+		LigacaoId id = new LigacaoId();
+
+		//recebe o cod_contato e verifica
+		do {
+			System.out.print("Digite o " + Titulo.COD_CONTATO + " para o qual você ligou : ");
+			codigo = sc.next();
+			sn = Funcoes.isNumeroInvalido(codigo);
+
+		} while (sn);
+		id.setCodContato(Integer.parseInt(codigo));
+
+		// Verifica se o contato existe
+		Contato contato1 = contatoBss.getContato(id.getCodContato());
+		if (contato1 == null) {
+
+			System.out.println("\n" + Titulo.COD_CONTATO + " não existe!!");
+
+		} else {
+
+			//recebe o cod_ligação e verifica
+			do {
+				System.out.print("Digite o " + Titulo.COD_LIGACAO + " a ser alterada : ");
+				codigo = sc.next();
+				sn = Funcoes.isNumeroInvalido(codigo);
+			} while (sn);
+			id.setCodLigacao(Integer.parseInt(codigo));
+
+			// Verifica se a ligação existe
+			ligacao = ligacaoBss.getLigacao(id.getCodContato(), id.getCodLigacao());
+			if (ligacao == null) {
+				System.out.println("\nLigação não existe!");
+				
+			} else {
+				
+				sc.nextLine();
+
+				
+				//recebe e verifica se foi digitada uma data
+				System.out.print("Digite a data [dd/mm/yyyy] : ");
+				data = sc.nextLine();
+				if (data == null | data.equals("")) {
+					data= Funcoes.separa(Funcoes.dateToStr(ligacao.getDataHora()), " ")[0];
+				}
+
+				// vai pedir a hora e minutos a ser alterados, depois passa a verifica a hora e minutos
+				do {
+					System.out.print("Digite a Hora [HH:MM] : ");
+					hora = sc.nextLine();
+
+					if (hora != null & !hora.equals("")) {
+						String[] horas = Funcoes.separa(hora, ":");
+						Integer h = Integer.parseInt(horas[0]);
+						Integer m = Integer.parseInt(horas[1]);
+
+						if (h >= 24 | m >= 60) {
+
+							System.out.println("\nHoras ou Minutos acima do Limite");
+							sn = true;
+						} else {
+							sn = false;
+						}
+					} else {
+						hora = Funcoes.separa(Funcoes.dateToStr(ligacao.getDataHora()), " ")[1];
+					}
+				} while (sn);
+
+				//seta data e hora
+				ligacao.setDataHora(Funcoes.strToDH(data + " " + hora));
+
+				//recebee verifica Se obs foi escrito e seta a observação
+				System.out.print("Digite a observação : ");
+				obs = sc.nextLine();
+				if (obs != null & !obs.equals("")) {
+					ligacao.setObs(obs);
+				}
+
+				ligacaoBss.alteraLigacao(ligacao);
+
+				System.out.println();
+				System.out.println("Ligação Alterada com sucesso!");
+			}
+		}
+	}
+
+	private static void ligacaoAdiciona(Scanner sc) {
+		
+		boolean sn;
+		String cod;
+		String data;
+		String hora;
+		String obs;
+		Ligacao ligacao = new Ligacao();
+		LigacaoId id = new LigacaoId();
+
+		//recebe o cod_contato e verifica
+		do {
+			System.out.print("Digite o " + Titulo.COD_CONTATO + " : ");
+			cod = sc.next();
+			sn = Funcoes.isNumeroInvalido(cod);
+		} while (sn);
+		id.setCodContato(Integer.parseInt(cod));
+
+		// verifica se contato existe
+		if (contatoBss.getContato(Integer.parseInt(cod)) == null) {
+
+			System.out.println("\n" + Titulo.COD_CONTATO + " não existe!!");
+
+		} else {
+
+			//recebe o cod_ligacao automaticamente
+			id.setCodLigacao(ligacaoBss.getCodLigacao(id.getCodContato()) + 1);
+			
+			ligacao.setId(id);
+
+			//recebe data
+			System.out.print("Digite a data [dia/mes/ano] : ");
+			data = sc.next();
+
+			//recebe hora e verifica
+			do {
+				System.out.print("Digite a Hora [Hora:Minutos] : ");
+				hora = sc.next();
+				String[] horas = Funcoes.separa(hora, ":");
+				Integer h = Integer.parseInt(horas[0]);
+				Integer m = Integer.parseInt(horas[1]);
+
+				if (horas.length < 3) {
+
+					if (h >= 24 | m >= 60) {
+
+						System.out.println("\nHoras ou Minutos acima do Limite");
+						sn = true;
+
+					} else {
+						sn = false;
+					}
+				}
+			} while (sn);
+
+			ligacao.setDataHora(Funcoes.strToDH(data + " " + hora));
+
+			sc.nextLine();
+			System.out.print("Digite a observação {opcional} : ");
+			obs = sc.nextLine();
+			ligacao.setObs(obs);
+
+			ligacaoBss.adicionaLigacao(ligacao);
+
+			System.out.println("\nLigação adicionada");
+		}
+	}
+
+	private static void ligacaoLista() {
+		
+		List<Ligacao> list = ligacaoBss.getlist();
+
+		System.out.println("-------------------------------------\n");
+
+		System.out.print("|Cod_ligação");
+		System.out.print("|Cod_Contato");
+		System.out.print("|    DATA_HORA     ");
+		System.out.print("|Obs");
+		System.out.println();
+		for (Ligacao ligacao : list) {
+			System.out.print("|");
+			System.out.print(String.format("%-11.11s", ligacao.getId().getCodContato()));
+			System.out.print("|");
+			System.out.print(String.format("%-11.11s", ligacao.getId().getCodLigacao()));
+			System.out.print("|");
+			System.out.print(String.format("%-18.18s", Funcoes.dateToStr(ligacao.getDataHora())));
+			System.out.print("|");
+			System.out.print(ligacao.getObs());
+			System.out.println();
+		}
+
+		System.out.println("-------------------------------------");
 	}
 
 }

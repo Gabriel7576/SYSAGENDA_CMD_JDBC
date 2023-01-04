@@ -1,36 +1,27 @@
 package br.com.gabriel.sysagenda.domain;
 
+import java.util.Date;
+
 public class Ligacao {
 
-	private int codLigacao;
-	private int codContato;
-	private String data;
-	private String hora;
-	private String nome;
+	private LigacaoId id;
+	private Date dataHora;
 	private String obs;
 
-	public int getCodContato() {
-		return codContato;
+	public LigacaoId getId() {
+		return id;
 	}
 
-	public void setCodContato(int codContato) {
-		this.codContato = codContato;
+	public void setId(LigacaoId id) {
+		this.id = id;
 	}
 
-	public int getCodLigacao() {
-		return codLigacao;
+	public Date getDataHora() {
+		return dataHora;
 	}
 
-	public void setCodLigacao(int codLigacao) {
-		this.codLigacao = codLigacao;
-	}
-
-	public String getData() {
-		return data;
-	}
-
-	public void setData(String data) {
-		this.data = data;
+	public void setDataHora(Date dataHora) {
+		this.dataHora = dataHora;
 	}
 
 	public String getObs() {
@@ -41,25 +32,9 @@ public class Ligacao {
 		this.obs = obs;
 	}
 
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getHora() {
-		return hora;
-	}
-
-	public void setHora(String hora) {
-		this.hora = hora;
-	}
-
 	@Override
 	public String toString() {
-		return "| Cod_Contato = "+codContato+"\t Nome = " + nome + "\t Cod_Ligação = " + codLigacao + "\t Data_Hora = " + data + "\t Observação = "
-			+ obs + " |";
+		return "Ligacao [id=" + id + ", dataHora=" + dataHora + ", obs=" + obs + "]";
 	}
+
 }

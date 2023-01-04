@@ -18,15 +18,13 @@ public class Funcoes {
 
 	}
 
-	public static boolean verificaNumero(String num) {
-		boolean sn = false;
-		for (int i = 0; i < num.length(); i++) {
-			char c = num.charAt(i);
-			if (('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z')) {
-				sn = true;
-			}
+	public static boolean isNumeroInvalido(String num) {
+		try {
+			Long.parseLong(num);
+			return false;
+		}catch (NumberFormatException e) {
 		}
-		return sn;
+		return true;
 	}
 
 	public static String[] separa(String palavra, String caractere) {
@@ -35,6 +33,17 @@ public class Funcoes {
 	}
 
 	public static Date strToDate(String sData) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date data = null;
+		try {
+			data = sdf.parse(sData);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return data;
+	}
+
+	public static Date strToDH(String sData) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		Date data = null;
 		try {

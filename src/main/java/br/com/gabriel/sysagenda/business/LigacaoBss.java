@@ -16,7 +16,7 @@ public class LigacaoBss {
 
 	public List<Ligacao> getlist() {
 
-		return dao.lista();
+		return dao.getlista();
 	}
 
 	public Ligacao getLigacao(int codContato, int codLigacao) {
@@ -39,9 +39,9 @@ public class LigacaoBss {
 		dao.deletaUma(ligacao);
 	}
 	
-	public Integer getCodLigacao(Integer cod) {
+	public Integer getCodLigacao(Integer codContato) {
 		
-		return dao.getUtlCodLigacao(cod);
+		return dao.getUtlCodLigacao(codContato);
 	}
 
 }

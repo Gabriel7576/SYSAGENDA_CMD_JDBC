@@ -29,12 +29,12 @@ public class ContatoBss {
 		dao.altera(contato);
 	}
 
-	public void deletaContato(Integer codContato, boolean simNao) {
-		if (simNao) {
-			LigacaoBss ligacaoBss = new LigacaoBss();
-			ligacaoBss.deletaLigacoes(codContato);
-			dao.deleta(codContato);
-		}
+	public void deletaContato(Integer codContato) {
+
+		
+		new LigacaoBss().deletaLigacoes(codContato);
+		dao.deleta(codContato);
+
 	}
 
 	public Integer getCodContato() {

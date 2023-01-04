@@ -4,7 +4,15 @@ public class Contato {
 
 	private int codContato;
 	private String nome;
-	private long telefone;
+	private Long telefone;
+
+	public int getCodContato() {
+		return codContato;
+	}
+
+	public void setCodContato(int codContato) {
+		this.codContato = codContato;
+	}
 
 	public String getNome() {
 		return nome;
@@ -14,20 +22,12 @@ public class Contato {
 		this.nome = nome;
 	}
 
-	public long getTelefone() {
+	public Long getTelefone() {
 		return telefone;
 	}
 
-	public void setTelefone(long telefone) {
+	public void setTelefone(Long telefone) {
 		this.telefone = telefone;
-	}
-
-	public int getCodContato() {
-		return codContato;
-	}
-
-	public void setCodContato(int codContato) {
-		this.codContato = codContato;
 	}
 
 	@Override
